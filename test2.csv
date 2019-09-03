@@ -1,0 +1,5 @@
+ID,type,amount,vat,ex_vat,IP
+1101402177272,Adjustments Claim,-525,0,-525,124.120.117.18
+AHC,Adjustments Others,0,0,0,124.120.117.19
+AHC,Adjustments Shipping Fee,0,0,0,124.120.117.20
+AHC,Commission,-1129.31,73.88,-1203.19,124.120.117.21

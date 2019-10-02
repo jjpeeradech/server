@@ -1,31 +1,42 @@
-//console.log('index.js')
 const { ipcRenderer } = require('electron')
+const express = require('express')
+const bodyParser = require('body-parser')
+const apps = express()
+const port = 3001
+const cors = require('cors')
+apps.use(bodyParser.json());
+apps.use(cors());
 const result = []
-//var nationalID;
-//var x = document.getElementById("Btn").textContent;
 ipcRenderer.on('forWin1', function (event, arg2,arg3){
   console.log(arg2);
   console.log(arg3);
   //nationalID=arg2;
-  var chk =checkID(arg2,arg3);
-  if(chk){
-    ipcRenderer.sendSync('checkID','True')
+  var chk =checkID(arg3,arg2);
+  console.log(chk);
+  if(chk != false){
+    return chk
   }
-  if(!chk){
-    ipcRenderer.sendSync('checkID','False')
+  if(chk == false){
+    return 'False'
   }
 });
-document.getElementById("btn").addEventListener("click", function() {
-    //console.log(ipcRenderer.sendSync('message', 'ping synchronous')) // prints "pong"
-    var x = document.getElementById('mytext').value;
-    console.log(x)
-    ipcRenderer.sendSync('message',x)
-    /*ipcRenderer.on('asynchronous-reply', (event, arg) => {
-    console.log(arg) })
-
-    ipcRenderer.send('asynchronous-message', 'ping asynchronous')*/
-  });
-  function Upload() {
+apps.get('/', (req,res)=> {
+    ipAddress = req.query.ip
+    nationalID = req.query.input
+    console.log(ipAddress)
+    console.log(nationalID)
+    //nationalID=arg2;
+    var chk =checkID(ipAddress,nationalID);
+    console.log(chk);
+    if(chk != false){
+        res.send({response:chk})
+    }
+    if(chk == false){
+        res.send({response:'False'})
+    }
+  })
+  apps.listen(port)
+  function Uploadcsv() {
     var fileUpload = document.getElementById("fileUpload");
     var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
     if (regex.test(fileUpload.value.toLowerCase())) {
@@ -49,21 +60,7 @@ document.getElementById("btn").addEventListener("click", function() {
                 for(let j=0;j<result.length;j++){
                     console.log(result[j])
                 }
-               /* for (var i = 0; i < rows.length; i++) {
-                    var cells = rows[i].split(",");
-                    if (cells.length > 1) {
-                        var row = table.insertRow(-1);
-                        for (var j = 0; j < cells.length; j++) {
-                            var cell = row.insertCell(-1);
-                            cell.innerHTML = cells[j];
-                            console.log(cell.innerHTML)
-                        }
-                    }
-                }*/
                 alert("complete.");
-                //var dvCSV = document.getElementById("dvCSV");
-                //dvCSV.innerHTML = "";
-                //dvCSV.appendChild(table);
             }
             reader.readAsText(fileUpload.files[0]);
         } else {
@@ -74,10 +71,12 @@ document.getElementById("btn").addEventListener("click", function() {
     }
 }
 function checkID(arg2,arg3){
+    console.log(arg2)
+    console.log(arg3)
     for (var i = 0; i < result.length; i++){
-        if (result[i].ID == arg2 && result[i].IP== arg3){
-           console.log('Found')
-           return true;
+        if (result[i].ID == arg3 && result[i].IP== arg2){
+           console.log(result[i].Name)
+           return result[i].Name;
         }
       }
       return false;

@@ -1,7 +1,6 @@
 const { app, BrowserWindow } = require('electron')
 const electron = require('electron')
 const {ipcMain} = require('electron')
-const { ipcRenderer } = require('electron')
 console.log('main.js')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -9,35 +8,32 @@ var app2 = require('express')();
 var server = require('http').Server(app2);
 var io = require('socket.io')(server);
 var nationalID;
-var ip;
+var ipAddress;
 
 server.listen(5000);
 // WARNING: app.listen(80) will NOT work here!
-
-io.on('connection', (socket)=>{
-  socket.on('gg',(input)=>{
-    console.log(input)
-    nationalID = input;
-  })
-  socket.on('ip',(input)=>{
-    ip=input;
-    console.log(ip)
-  })
-  win.webContents.send('forWin1',nationalID,ip);
-  console.log('connected')
+// io.on('connection',(socket)=>{
+//   socket.on('ip',async function(input,ip){
+//     ipAddress = ip
+//     nationalID = input
+//     console.log(ipAddress)
+//     console.log(nationalID)
+//     await win.webContents.send('forWin1',nationalID, ipAddress);
+//   })
+//   //socket.on('ip',(input)=>{
+//   //  ip= input;
+//   //  console.log(ip)
+//   //})
   
-});
-  ipcMain.on('message', (event, arg1) => {
-    //io.emit('news', arg1);
-    console.log(arg1);
-    event.returnValue = null
-  })
-   ipcMain.on('checkID', (event, arg2) => {
-    io.emit('checkID', arg2);
-    console.log(arg2);
-    event.returnValue = null
-})
-
+//   console.log('connected')
+  
+// });
+//   ipcMain.on('checkID', (event, arg2) => {
+//     io.emit('checkID', arg2);
+//     console.log(arg2);
+//     event.returnValue = null
+// })
+   
 
 
 let win
